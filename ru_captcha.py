@@ -115,7 +115,7 @@ class RUCaptcha(object):
                     self.__monitoring.register(ru_captcha_value)
         return result
 
-    def parse(self, path, is_phrase=0, is_regsense=0, is_numeric=0, min_len=0, max_len=30, language=0):
+    def parse(self, path, is_phrase=0, is_regsense=0, is_numeric=0, min_len=0, max_len=30, language=0, mime='image/jpeg'):
         """
         Дополнительные параметры капчи:
             is_phrase       0 OR 1 - капча из двух или более слов
@@ -124,13 +124,14 @@ class RUCaptcha(object):
             min_len         0 если не ограничено, иначе обозначает минимальную длинну ответа
             max_len         0 если не ограничено, иначе обозначает минимальную длинну ответа
             language        0 OR 1 OR 2  0 = параметр не задействован (значение по умолчанию) 1 = капча на кирилице 2 = капча на латинице
+            mime            mime тип изображения, по умолчанию - image/jpeg
         """
         result = None
         if not os.path.isfile(path):
             raise Exception("File {path} not found".format(path=path))
         url = "http://rucaptcha.com/in.php"
         files = [
-            ('file', ('captcha.jpg', open(path, 'rb'), 'image/jpeg'))
+            ('file', ('captcha', open(path, 'rb'), mime))
         ]
         data = {
             'method'    : 'post',
